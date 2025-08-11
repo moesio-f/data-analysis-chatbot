@@ -1,0 +1,6 @@
+# Whitelist
+*
+
+# Source code/dependencies
+!**/*.py
+!**/requirements.txt
