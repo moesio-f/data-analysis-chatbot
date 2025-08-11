@@ -56,4 +56,4 @@ TODO
 ## Considerações de Segurança
 
 - Por ser um sistema de análise, se supõe uma ferramenta de uso interno, dessa forma proteções contra SQL Injection foram simplificadas;
-    - Em um cenário onde tais premissas não são verdadeiras, é importante seguir as recomendações de segurança (e.g., [OWASP SQL Injection Prevention](cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html));
+    - Em um cenário onde tais premissas não são verdadeiras, é importante seguir as recomendações de segurança (e.g., [OWASP SQL Injection Prevention](https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html));
