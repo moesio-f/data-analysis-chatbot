@@ -1,6 +1,6 @@
 # Chatbot para Análise de Dados
 
-Esse repositório contém a implementação de um chatbot utilizando [Langchain](https://github.com/langchain-ai/langchain), [Streamlit](https://streamlit.io/), e [FastAPI](https://fastapi.tiangolo.com/), com o intuito de facilitar análise dados de diferentes fontes, com diferentes formatos, permitindo a exploração e resposta à perguntas simples. 
+Esse repositório contém a implementação de um chatbot utilizando [Langchain](https://github.com/langchain-ai/langchain), [Streamlit](https://streamlit.io/), e [FastAPI](https://fastapi.tiangolo.com/), com o intuito de facilitar análise dados de diferentes fontes, com diferentes formatos, permitindo a exploração e resposta à perguntas simples.
 
 ## Quickstart
 
@@ -31,13 +31,22 @@ flowchart LR
       agent(Módulo de Agentes) -->|Utiliza| tools(Módulo de Ferramentas)
     end
 
-    chat --> |RESTFul API| orchestrator
+    subgraph Data Source API
+      ds_api(API) -->|Gerencia| ds_db[("Bando de Dados")]
+    end
 
+    onboarding --> |Consome| ds_api
+    orchestrator --> |Consome| ds_api
+    explorer --> |Consome| ds_api
+    chat --> |API| orchestrator
     explorer -->|Queries| db
     tools --> |Queries| db
 ```
 
 - `UI`: interface gráfica implementada como um dashboard usando Streamlit;
+- `Data Source API`: gerenciador de fontes de dados disponíveis para análise;
+    - Armazena metadados sobre as fontes de dados;
+    - Organiza identificadores únicos para fontes de dados;
 - `Chatbot Engie`: motor do chatbot, internamente utiliza LLMs e outras técnicas;
     - `Orquestrador`: componente responsável por organizar os agentes e suas estruturas de memórias;
         - Não necessariamente reflete um componente "tangível" no código (e.g., classe/entidade);
@@ -49,11 +58,31 @@ flowchart LR
     - O sistema interage com tais fontes única e exclusivamente através de queries;
     - Por simplicidade, atualização nessas fontes não é permitido por nenhum componente do sistema;
 
+
+O sistema é arquitetado para ser utilizado para múltiplas fontes distintas de dados, que devem ser previamente cadastradas via API, cujas conexões são suportadas. De maneira geral, o principal fluxo do sistema é o seguinte:
+
+1. Usuário acessa à UI e é redirecionado para o módulo de _onboarding_;
+2. O módulo de onboarding permite ao usuário cadastrar uma nova fonte de dados ou se conectar à uma já existente no sistema;
+    - Esse módulo se comunica diretamente com a API de fontes de dados;
+3. Uma vez que o usuário tenha selecionado a fonte de dados que vai trabalhar, a UI libera o acesso para os módulos de `Chatbot` e `Explorer`;
+4. Caso o usuário deseje visualizar os dados de formais _mais clássica_ com uma descrição da fonte de dados, estatística descritiva e outras visualizações pré-definidas, basta acessar a aba `Explorer`;
+    - Essa aba implementa o fluxo clássico de exploração de dados;
+    - Essencialmente, é uma descrição da fonte dados que o usuário está conectado;
+    - Consome a API de fonte de dados para obter informações sobre schema, método de conexão, entre outros;
+5. Caso o usuário deseje explorar a fonte de dados através de linguagem natural, basta acessar a aba `Chatbot`;
+    - Essa aba se comunica com a API do Chatbot, permitindo que perguntas de linguagem natural sejam convertidas em explorações nas fontes de dados;
+    - O processamento ocorre de forma síncrona usando _streams_;
+        - Uma alternativa para escalabilidade seria utilizar processamento assíncrono utilizando tecnologias como RabbitMQ ou Kafka;
+    - Internamente, a API mantém sessões/histórico para as diferentes fontes de dados (deve ser informado como parte da requisição);
+    - Só é possível consumir a API em uma fonte de dados cadastrada no sistema;
+
 ## Estrutura do Repositório
 
 TODO
 
-## Considerações de Segurança
+## Considerações & Premissas
 
 - Por ser um sistema de análise, se supõe uma ferramenta de uso interno, dessa forma proteções contra SQL Injection foram simplificadas;
     - Em um cenário onde tais premissas não são verdadeiras, é importante seguir as recomendações de segurança (e.g., [OWASP SQL Injection Prevention](https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html));
+- Por simplicidade, não foram implementados os métodos para deleção de uma fonte dados;
+    - Na prática, seria necessário que a API de fonte dados enviasse um _post_ para algum callback do Chatbot, permitindo que a memória relacionada com tal banco fosse removida;
