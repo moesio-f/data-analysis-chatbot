@@ -1,9 +1,8 @@
 """Conexão com o banco."""
 
 import sqlalchemy as sa
-from fastapi import Depends
-
 from app.config import settings
+from fastapi import Depends
 
 engine = sa.create_engine(settings.database_url)
 

@@ -1,0 +1,79 @@
+"""Ferramenta básica
+para consultas em fontes
+de dados utilizando sintaxe
+ANSI SQL.
+"""
+
+import logging
+from typing import Annotated, Optional
+
+from chat.entities import DataSource
+from langchain_core.tools import InjectedToolArg, tool
+
+from .exceptions import InvalidTable
+
+LOGGER = logging.getLogger(__name__)
+
+
+@tool(
+    parse_docstring=True,
+    description="Só deve ser utilizado quando o usuário "
+    "necessitar de buscar dados na fonte de dados.",
+)
+def run_sql_select(
+    ds: Annotated[DataSource, InjectedToolArg],
+    table: str,
+    select_columns: list[str],
+    where_clause: Optional[str] = "",
+    group_by: Optional[str] = "",
+    having: Optional[str] = "",
+    order_by: Optional[str] = "",
+    limit: Optional[int] = -1,
+) -> list[dict]:
+    """Realize uma consulta SELECT usando
+    SQL. Permite o uso de operações (e.g., SUM)
+    ordenamento, filtros, e agrupamento.
+
+    Args:
+        table (str): tabela a ser utilizada na
+            consulta.
+        select_columns (list[str]): colunas utilizadas
+            na consulta.
+        where_clause (str): filtragem WHERE.
+        group_by (str): cláusula de agrupamento GROUP BY.
+        having (str): cláusula de agrupamento HAVING.
+        order_by (str): cláusula de ordenação ORDER BY.
+
+    Returns:
+        list[dict]: resultado da consulta,
+            cada elemento da lista corresponde
+            à uma linha.
+    """
+    if table != ds.name:
+        # In the future we might allow data sources
+        #   with multiple tables.
+        raise InvalidTable("Invalid table for data source '%s'.", ds.name)
+
+    # Dynamic query construction
+    # WARNING:. currently unsafe, allows for SQL injection;
+    #   Should use prepared statements and other strategies
+    #   for dynamic generation when creating PRC.
+    sql = [f"SELECT {','.join(select_columns)} FROM {table}"]
+
+    if where_clause:
+        sql.append(f" WHERE {where_clause}")
+
+    if group_by:
+        sql.append(f" GROUP BY {group_by}")
+
+    if having:
+        sql.append(f" HAVING {having}")
+
+    if order_by:
+        sql.append(f" ORDER BY {order_by}")
+
+    if limit > 0:
+        sql.append(f" LIMIT {limit}")
+
+    LOGGER.debug("Agent called tool with options: %s", locals())
+    return ds.connector.query("".join(sql)).to_dict(orient="records")

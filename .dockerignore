@@ -4,3 +4,4 @@
 # Source code/dependencies
 !**/*.py
 !**/requirements.txt
+!chatbot/**/*.yaml

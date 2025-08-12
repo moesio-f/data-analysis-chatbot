@@ -3,6 +3,7 @@ from logging import config
 
 LOGGING_CONFIG = {
     "version": 1,
+    "disable_existing_loggers": False,
     "formatters": {
         "rich_fmt": {"format": "[%(name)s][%(funcName)s]: %(message)s"},
     },

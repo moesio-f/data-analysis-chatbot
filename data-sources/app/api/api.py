@@ -33,11 +33,17 @@ async def lifespan(app: FastAPI):
 
 
 LOGGER = logging.getLogger(__name__)
-app = FastAPI(lifespan=lifespan, debug=settings.run_with_debug)
+app = FastAPI(
+    lifespan=lifespan,
+    debug=settings.run_with_debug,
+    title="Data Source API",
+    description="API para gerenciamento de fontes de dados.",
+    version="1.0.0",
+)
 
 
 @app.post("/create")
-def create_source(
+async def create_source(
     ds: models.DataSourceInput, session: Session = RequiresSession
 ) -> models.DataSource:
     """Cria uma nova fonte de dados
@@ -63,7 +69,7 @@ def create_source(
 
 
 @app.get("/list")
-def list_sources(session: Session = RequiresSession) -> list[models.DataSource]:
+async def list_sources(session: Session = RequiresSession) -> list[models.DataSource]:
     """Retorna todas as fontes de dados cadastradas
     no sistema.
     """
@@ -79,7 +85,7 @@ def list_sources(session: Session = RequiresSession) -> list[models.DataSource]:
 
 
 @app.get("/info/{id}")
-def get_source(id: int, session: Session = RequiresSession) -> models.DataSource:
+async def get_source(id: int, session: Session = RequiresSession) -> models.DataSource:
     """Retorna informações para a fonte de dados
     com esse id.
     """
@@ -87,3 +93,9 @@ def get_source(id: int, session: Session = RequiresSession) -> models.DataSource
         return session.query(db.DataSource).where(db.DataSource.id == id).one()
     except NoResultFound:
         raise HTTPException(status_code=404, detail="Data source not found.")
+
+
+@app.get("/healthcheck")
+async def healthcheck():
+    """Healthcheck da API."""
+    return "OK"

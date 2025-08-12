@@ -4,7 +4,12 @@ Esse repositório contém a implementação de um chatbot utilizando [Langchain]
 
 ## Quickstart
 
-TODO
+Para testar localmente, basta utilizar o comando `make`. O arquivo `Makefile` contém a definição das tarefas necessárias para execução com Docker. A configuração padrão executa um modelo [`gpt-oss>:20b`](https://ollama.com/library/gpt-oss) do [`Ollama`](https://ollama.com/).
+
+Uma vez que o sistema esteja disponível, as seguintes APIs estão disponíveis:
+
+- `Chatbot API`: `localhost:8080/docs`, API para comunicação com o chatbot;
+- `Data Source API`: `localhost:8083/docs`, API para gerenciamento das fontes de dados;
 
 ## Arquitetura do Sistema
 
