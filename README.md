@@ -52,7 +52,7 @@ flowchart LR
 - `Data Source API`: gerenciador de fontes de dados disponíveis para análise;
     - Armazena metadados sobre as fontes de dados;
     - Organiza identificadores únicos para fontes de dados;
-- `Chatbot Engie`: motor do chatbot, internamente utiliza LLMs e outras técnicas;
+- `Chatbot Engine`: motor do chatbot, internamente utiliza LLMs e outras técnicas;
     - `Orquestrador`: componente responsável por organizar os agentes e suas estruturas de memórias;
         - Não necessariamente reflete um componente "tangível" no código (e.g., classe/entidade);
         - É o componente responsável por garantir que partes distintas do sistema se integrem (e.g., agentes, memória);
@@ -92,4 +92,6 @@ TODO
 - Por simplicidade, não foram implementados os métodos para deleção de uma fonte dados;
     - Na prática, seria necessário que a API de fonte dados enviasse um _post_ para algum callback do Chatbot, permitindo que a memória relacionada com tal banco fosse removida;
 - Para melhoria de performance e melhor UX, a API do Chatbot deveria retornar uma resposta em formato de _streaming_;
-    - Para facilitar a implementação, só consideramos o caso de uso do `.invoke(...)` (para `.stream(...)` são necessárias algumas checagens para adequação ao modo);  
+    - Para facilitar a implementação, só consideramos o caso de uso do `.invoke(...)` (para `.stream(...)` são necessárias algumas checagens para adequação ao modo);
+- Por simplicidade, apenas o caso de fontes de dados em storages `S3`-compatible foram implementadas;
+    - A interface `Connector` permite que seja simples expandir para outras fontes (e.g., Cloud SQL, RDS/Aurora, Redshift); 
