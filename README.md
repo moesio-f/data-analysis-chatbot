@@ -8,8 +8,9 @@ Para testar localmente, basta utilizar o comando `make`. O arquivo `Makefile` co
 
 Uma vez que o sistema esteja disponível, as seguintes APIs estão disponíveis:
 
-- `Chatbot API`: [`localhost:8080/docs`](http://localhost:8080/docs), API para comunicação com o chatbot;
-- `Data Source API`: [`localhost:8083/docs`](http://localhost:8080/docs), API para gerenciamento das fontes de dados;
+- `Dashboard`: [`localhost:8081/docs`](http://localhost:8081/docs), dashboard para o chatbot;
+- `Chatbot API`: [`localhost:8082/docs`](http://localhost:8082/docs), API para comunicação com o chatbot;
+- `Data Source API`: [`localhost:8083/docs`](http://localhost:8083/docs), API para gerenciamento das fontes de dados;
 
 ## Arquitetura do Sistema
 
@@ -26,8 +27,7 @@ flowchart LR
 
     subgraph UI
       chat(Chat) 
-      onboarding(Onboarding)
-      explorer(Data Explorer)
+      login(Login)
     end
 
     subgraph Chatbot Engine
@@ -37,14 +37,12 @@ flowchart LR
     end
 
     subgraph Data Source API
-      ds_api(API) -->|Gerencia| ds_db[("Bando de Dados")]
+      ds_api(API) -->|Gerencia| ds_db[("Banco de Dados")]
     end
 
-    onboarding --> |Consome| ds_api
+    login --> |Consome| ds_api
     orchestrator --> |Consome| ds_api
-    explorer --> |Consome| ds_api
     chat --> |API| orchestrator
-    explorer -->|Queries| db
     tools --> |Queries| db
 ```
 
@@ -66,8 +64,8 @@ flowchart LR
 
 O sistema é arquitetado para ser utilizado para múltiplas fontes distintas de dados, que devem ser previamente cadastradas via API, cujas conexões são suportadas. De maneira geral, o principal fluxo do sistema é o seguinte:
 
-1. Usuário acessa à UI e é redirecionado para o módulo de _onboarding_;
-2. O módulo de onboarding permite ao usuário cadastrar uma nova fonte de dados ou se conectar à uma já existente no sistema;
+1. Usuário acessa à UI e é redirecionado para o módulo de login;
+2. O módulo de login permite ao usuário cadastrar uma nova fonte de dados ou se conectar à uma já existente no sistema;
     - Esse módulo se comunica diretamente com a API de fontes de dados;
 3. Uma vez que o usuário tenha selecionado a fonte de dados que vai trabalhar, a UI libera o acesso para os módulos de `Chatbot` e `Explorer`;
 4. Caso o usuário deseje visualizar os dados de formais _mais clássica_ com uma descrição da fonte de dados, estatística descritiva e outras visualizações pré-definidas, basta acessar a aba `Explorer`;
@@ -93,5 +91,8 @@ TODO
     - Na prática, seria necessário que a API de fonte dados enviasse um _post_ para algum callback do Chatbot, permitindo que a memória relacionada com tal banco fosse removida;
 - Para melhoria de performance e melhor UX, a API do Chatbot deveria retornar uma resposta em formato de _streaming_;
     - Para facilitar a implementação, só consideramos o caso de uso do `.invoke(...)` (para `.stream(...)` são necessárias algumas checagens para adequação ao modo);
-- Por simplicidade, apenas o caso de fontes de dados em storages `S3`-compatible foram implementadas;
+- Apenas o caso de fontes de dados em storages `S3`-compatible foram implementadas;
     - A interface `Connector` permite que seja simples expandir para outras fontes (e.g., Cloud SQL, RDS/Aurora, Redshift); 
+- A persistência do histórico de mensagens não foi implementada;
+    - O ideal seria utilizar as facilidades do `langchain` para memória de longo termo;
+    - Além disso, seriam necessárias novas rotas na API para permitir a recuperação do histórico (e.g., paginação, filtros, etc);

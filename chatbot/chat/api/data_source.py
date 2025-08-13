@@ -32,6 +32,7 @@ def get_source(data_source_id: int) -> DataSource:
         raise NotImplementedError("Current version only supports S3 connection.")
 
     connector = DuckDBS3Connector(data["connection_string"], data["name"])
+    connector.connect()
     columns = [
         Column(name=c["name"], description=c["description"]) for c in data["columns"]
     ]

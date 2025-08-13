@@ -3,6 +3,7 @@ RESTFul para comunicação
 com o chatbot.
 """
 
+import textwrap
 import logging
 from typing import Annotated
 
@@ -47,6 +48,11 @@ async def send_message_and_stream(
     A resposta é retornada em formato de _stream_ para melhor
     integração com UIs de chat.
     """
+    LOGGER.debug(
+        "Received message from user on data souce %d: '%s'",
+        data_source_id,
+        textwrap.shorten(message, width=80),
+    )
     try:
         ds = get_source(data_source_id)
         agent = get_data_analyst_agent(ds)
@@ -54,8 +60,9 @@ async def send_message_and_stream(
         LOGGER.error("Failed to create agent: %s", e, exc_info=True)
         raise
 
+    LOGGER.debug("Data source and agent ready. Running agent...")
     try:
-        return run_agent(
+        answer = run_agent(
             agent,
             [
                 SystemMessage(
@@ -66,6 +73,12 @@ async def send_message_and_stream(
             ],
             {"configurable": {"thread_id": data_source_id}},
         )
+        LOGGER.debug(
+            "Agent answered with %d tokens: '%s'",
+            len(answer),
+            textwrap.shorten(answer, width=80),
+        )
+        return answer
 
     except Exception as e:
         LOGGER.error("Failed to run agent: %s", e, exc_info=True)

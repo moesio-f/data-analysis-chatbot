@@ -15,7 +15,7 @@ class model_settings(BaseSettings):
         provider: provedor do modelo.
     """
 
-    model: str = "gpt-oss"
+    model: str = "gpt-oss:20b"
     provider: str = "ollama"
 
 
@@ -26,5 +26,4 @@ class data_source_api_settings(BaseSettings):
     """
 
     model_config = {"env_prefix": "DATA_SOURCE_"}
-
     url: str

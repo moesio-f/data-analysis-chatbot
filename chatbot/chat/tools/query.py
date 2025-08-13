@@ -17,8 +17,9 @@ LOGGER = logging.getLogger(__name__)
 
 @tool(
     parse_docstring=True,
-    description="Só deve ser utilizado quando o usuário "
-    "necessitar de buscar dados na fonte de dados.",
+    description="Permite realizar buscas na fonte/banco"
+    "de dados do usuário. Deve ser utilizado para responder "
+    "perguntas sobre os dados.",
 )
 def run_sql_select(
     ds: Annotated[DataSource, InjectedToolArg],

@@ -3,7 +3,6 @@ from logging import config
 
 LOGGING_CONFIG = {
     "version": 1,
-    "remove_existing_loggers": False,
     "formatters": {
         "rich_fmt": {"format": "[%(name)s][%(funcName)s]: %(message)s"},
     },
@@ -17,10 +16,12 @@ LOGGING_CONFIG = {
         },
     },
     "loggers": {
-        "app": {
+        "chat": {
             "handlers": ["rich"],
             "level": "DEBUG",
+            "propagate": False,
         },
+        "": {"handlers": ["rich"], "level": "WARNING"},
     },
 }
 config.dictConfig(LOGGING_CONFIG)

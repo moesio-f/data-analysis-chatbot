@@ -1,4 +1,4 @@
-all: down build up install-ollama-gpt-oss 
+all: down build up install-ollama-gpt-oss populate-data-source
 
 down:
 	@docker compose down --remove-orphans
@@ -24,5 +24,5 @@ stats:
 install-ollama-gpt-oss:
 	@docker compose exec ollama ollama pull gpt-oss:20b
 
-popullate-data-source:
+populate-data-source:
 	@python ./populate_sources.py
