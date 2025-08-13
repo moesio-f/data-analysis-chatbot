@@ -38,3 +38,8 @@ st.selectbox(
 
 # ====== Cadastro ======
 st.subheader("Cadastrar nova Fonte de Dados", divider="gray")
+st.markdown(":construction: _Em construção_ :construction:")
+st.info(
+    "Por ora, realize requisições diretamente à API de gerenciamento"
+    "de fontes de dados."
+)

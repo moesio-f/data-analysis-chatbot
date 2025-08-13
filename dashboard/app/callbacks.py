@@ -12,6 +12,7 @@ def update_user_data(key: str):
         data_source: fonte de dados para o
             usuário.
     """
+    disconnect_user()
     data_source = st.session_state.get(key)
     if not data_source:
         return
@@ -34,3 +35,4 @@ def update_user_data(key: str):
 def disconnect_user():
     """Desconecta um usuário."""
     st.session_state[constants.USER_DATA_KEY] = dict()
+    st.session_state[constants.CHAT_HISTORY_KEY] = []

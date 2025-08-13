@@ -10,7 +10,7 @@ Para testar localmente, basta utilizar o comando `make`. O arquivo `Makefile` co
 
 Uma vez que o sistema esteja disponível, as seguintes APIs estão disponíveis:
 
-- `Dashboard`: [`localhost:8081/docs`](http://localhost:8081/docs), dashboard para o chatbot;
+- `Dashboard`: [`localhost:8081`](http://localhost:8081), dashboard para o chatbot;
 - `Chatbot API`: [`localhost:8082/docs`](http://localhost:8082/docs), API para comunicação com o chatbot;
 - `Data Source API`: [`localhost:8083/docs`](http://localhost:8083/docs), API para gerenciamento das fontes de dados;
 

@@ -71,7 +71,7 @@ def generate_query_tool(ds: DataSource) -> Callable:
         # WARNING:. currently unsafe, allows for SQL injection;
         #   Should use prepared statements and other strategies
         #   for dynamic generation when creating PRC.
-        sql = [f"SELECT {','.join(select_columns)} FROM {table}"]
+        sql = [f"SELECT {','.join(select_columns)} FROM '{table.strip("'")}'"]
 
         if where_clause:
             sql.append(f" WHERE {where_clause}")
@@ -88,7 +88,12 @@ def generate_query_tool(ds: DataSource) -> Callable:
         if limit > 0:
             sql.append(f" LIMIT {limit}")
 
-        res = ds.connector.query("".join(sql)).to_dict(orient="records")
+        LOGGER.debug("Running query: %s", sql)
+        try:
+            res = ds.connector.query("".join(sql)).to_dict(orient="records")
+        except Exception as e:
+            LOGGER.error("Failed to run query: %s", e, exc_info=True)
+            raise
         LOGGER.debug("Query returned: %s", res)
         return res
 

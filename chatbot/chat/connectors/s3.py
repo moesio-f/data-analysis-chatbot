@@ -26,9 +26,19 @@ class DuckDBS3Connector(Connector):
         assert any(
             connection_string.startswith(p) for p in ("gs://", "s3://", "https://")
         ), "Unsupported schema (must be gs://, s3:// or https://)."
-        assert any(
-            connection_string.endswith(p) for p in (".parquet", ".csv")
-        ), "Only CSV/Parquet are supported."
+
+        # Special case of `.gz` files without extension;
+        #   Required to load some non-standard datasets names
+        if connection_string.endswith(".gz") and not connection_string.endswith(
+            ".csv.gz"
+        ):
+            self._include_read_csv = True
+        else:
+            assert any(
+                connection_string.endswith(p) for p in (".parquet", ".csv", ".csv.gz")
+            ), "Only CSV/Parquet are supported."
+            self._include_read_csv = False
+
         super().__init__(connection_string, table)
         self._connection = None
 
@@ -38,9 +48,10 @@ class DuckDBS3Connector(Connector):
 
         self._connection = duckdb.connect(":memory:")
         self._connection.sql("INSTALL httpfs; LOAD httpfs;")
+        ds_read = "read_csv('{}')" if self._include_read_csv else "'{}'"
         self._connection.sql(
-            f"CREATE TABLE {self.table} AS SELECT "
-            f"* FROM '{self.connection_string}';"
+            f"CREATE TABLE '{self.table}' AS SELECT "
+            f"* FROM {ds_read.format(self.connection_string)};"
         )
 
     def disconnect(self):

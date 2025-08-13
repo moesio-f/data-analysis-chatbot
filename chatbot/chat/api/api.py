@@ -47,7 +47,7 @@ def run_agent(
 
 
 @app.post("/chat/{data_source_id}")
-async def send_message_and_stream(
+async def send_message(
     data_source_id: int,
     message: Annotated[str, Body(media_type="text/plain; charset=utf-8")],
 ):
