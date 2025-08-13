@@ -81,10 +81,6 @@ O sistema é arquitetado para ser utilizado para múltiplas fontes distintas de 
     - Internamente, a API mantém sessões/histórico para as diferentes fontes de dados (deve ser informado como parte da requisição);
     - Só é possível consumir a API em uma fonte de dados cadastrada no sistema;
 
-## Estrutura do Repositório
-
-TODO
-
 ## Considerações & Premissas
 
 - Por ser um sistema de análise, se supõe uma ferramenta de uso interno, dessa forma proteções contra SQL Injection foram simplificadas;
@@ -98,3 +94,13 @@ TODO
 - A persistência do histórico de mensagens não foi implementada;
     - O ideal seria utilizar as facilidades do `langchain` para memória de longo termo;
     - Além disso, seriam necessárias novas rotas na API para permitir a recuperação do histórico (e.g., paginação, filtros, etc);
+ 
+
+## Showcase
+
+> [!NOTE]
+> 
+> Para uma demonstração mais longa, acesse o [vídeo de showcase](.github/showcase.mkv).
+
+![](.github/showcase_1.gif)
+![](.github/showcase_2.gif)
