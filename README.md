@@ -4,7 +4,9 @@ Esse repositório contém a implementação de um chatbot utilizando [Langchain]
 
 ## Quickstart
 
-Para testar localmente, basta utilizar o comando `make`. O arquivo `Makefile` contém a definição das tarefas necessárias para execução com Docker. A configuração padrão executa um modelo [`gpt-oss>:20b`](https://ollama.com/library/gpt-oss) do [`Ollama`](https://ollama.com/).
+Para testar localmente, basta utilizar o comando `make`. O arquivo `Makefile` contém a definição das tarefas necessárias para execução com Docker. A configuração padrão utiliza o [`gemini-2.5-flash`](https://ai.google.dev/gemini-api/docs/api-key), sendo necessário adicionar um arquivo `.env` com o `GOOGLE_API_KEY`.
+
+É possível trocar o modelo e provedor diretamente no `docker-compose.yaml` através das variáveis de ambiente. Para facilitar execução local, o sistema também levanta uma instância do [`ollama`](https://hub.docker.com/r/ollama/ollama). O `Makefile` possui um exemplo de como baixar modelos no container.
 
 Uma vez que o sistema esteja disponível, as seguintes APIs estão disponíveis:
 

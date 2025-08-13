@@ -1,7 +1,7 @@
 """Página para acesso ao chatbot."""
 
 import streamlit as st
-from app import client, constants, callbacks
+from app import callbacks, client, constants
 
 user_data = st.session_state.get(constants.USER_DATA_KEY, dict())
 

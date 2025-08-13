@@ -3,12 +3,12 @@ RESTFul para comunicação
 com o chatbot.
 """
 
-import textwrap
 import logging
+import textwrap
 from typing import Annotated
 
 from fastapi import Body, FastAPI
-from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from langgraph.graph.state import CompiledStateGraph
 
 from .agent import get_data_analyst_agent
@@ -34,7 +34,16 @@ def run_agent(
     Return:
         str: tokens produzidos pelo agente.
     """
-    return agent.invoke({"messages": messages}, config)["messages"][-1].content
+    result = agent.invoke({"messages": messages}, config)
+    messages = result["messages"][::-1]
+    most_recent_ai_message = next(m for m in messages if isinstance(m, AIMessage))
+    answer = most_recent_ai_message.content
+
+    if not isinstance(answer, str):
+        LOGGER.warning("Agent produced non-textual output: %s", answer)
+        answer = str(answer)
+
+    return answer
 
 
 @app.post("/chat/{data_source_id}")

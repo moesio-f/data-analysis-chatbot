@@ -4,11 +4,8 @@ from chat.agents import data_analyst as da
 from chat.entities import DataSource
 from langgraph.checkpoint.memory import InMemorySaver
 
-# Memória do agente (short-term)
+# Memória dos agentes (short-term)
 _MEMORY: InMemorySaver = InMemorySaver()
-
-# Agente padrão
-_AGENT = da.create_agent(_MEMORY)
 
 
 def get_data_analyst_agent(ds: DataSource) -> da.CompiledStateGraph:
@@ -18,4 +15,4 @@ def get_data_analyst_agent(ds: DataSource) -> da.CompiledStateGraph:
         CompiledStateGraph: agente analista
             de dados.
     """
-    return da.inject_ds(_AGENT, ds)
+    return da.create_agent(ds, memory=_MEMORY)

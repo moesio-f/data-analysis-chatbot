@@ -38,10 +38,11 @@ services:
   chatbot_api:
     build:
       dockerfile: ./chatbot.Dockerfile
+    env_file: .env
     environment:
       DATA_SOURCE_URL: "http://ds_api:80/"
-      MODEL: "gpt-oss:20b"
-      PROVIDER: "ollama"
+      MODEL: "gemini-2.5-flash"
+      PROVIDER: "google_genai"
       OLLAMA_HOST: "ollama"
       TZ: "Brazil/East"
       PYTHONUNBUFFERED: 1

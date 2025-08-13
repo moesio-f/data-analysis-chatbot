@@ -1,4 +1,4 @@
-all: down build up install-ollama-gpt-oss populate-data-source
+all: down build up populate-data-source
 
 down:
 	@docker compose down --remove-orphans

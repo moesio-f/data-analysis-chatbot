@@ -3,7 +3,6 @@ com streamlit multi página.
 """
 
 import streamlit as st
-
 from app import patches
 
 # Set page global configuration
