@@ -8,8 +8,8 @@ Para testar localmente, basta utilizar o comando `make`. O arquivo `Makefile` co
 
 Uma vez que o sistema esteja disponível, as seguintes APIs estão disponíveis:
 
-- `Chatbot API`: `localhost:8080/docs`, API para comunicação com o chatbot;
-- `Data Source API`: `localhost:8083/docs`, API para gerenciamento das fontes de dados;
+- `Chatbot API`: [`localhost:8080/docs`](http://localhost:8080/docs), API para comunicação com o chatbot;
+- `Data Source API`: [`localhost:8083/docs`](http://localhost:8080/docs), API para gerenciamento das fontes de dados;
 
 ## Arquitetura do Sistema
 
@@ -55,7 +55,7 @@ flowchart LR
 - `Chatbot Engie`: motor do chatbot, internamente utiliza LLMs e outras técnicas;
     - `Orquestrador`: componente responsável por organizar os agentes e suas estruturas de memórias;
         - Não necessariamente reflete um componente "tangível" no código (e.g., classe/entidade);
-        - É o componente responsável por garantir que partes distintas do sistema se integrem (e.g., múltiplos agentes e estruturas de memória);
+        - É o componente responsável por garantir que partes distintas do sistema se integrem (e.g., agentes, memória);
     - `Módulo de Agentes`: contém a definição de diferentes _agentes_ do sistema;
     - `Módulo de Ferramentas`: contém a definição das _ações_ que agentes podem tomar no sistema (e.g., busca por dados/contexto, interação com os conjuntos de dados);
     - `Módulo de memória`: organização da estrutura de memória para agentes (e.g., sessões, históricos, contextos);
@@ -91,3 +91,5 @@ TODO
     - Em um cenário onde tais premissas não são verdadeiras, é importante seguir as recomendações de segurança (e.g., [OWASP SQL Injection Prevention](https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html));
 - Por simplicidade, não foram implementados os métodos para deleção de uma fonte dados;
     - Na prática, seria necessário que a API de fonte dados enviasse um _post_ para algum callback do Chatbot, permitindo que a memória relacionada com tal banco fosse removida;
+- Para melhoria de performance e melhor UX, a API do Chatbot deveria retornar uma resposta em formato de _streaming_;
+    - Para facilitar a implementação, só consideramos o caso de uso do `.invoke(...)` (para `.stream(...)` são necessárias algumas checagens para adequação ao modo);  
