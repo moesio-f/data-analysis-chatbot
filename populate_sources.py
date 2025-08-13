@@ -50,7 +50,11 @@ if __name__ == "__main__":
             url,
             json={
                 "name": "neurotech-challenge",
-                "description": "",
+                "description": (
+                    "Dataset para um desafio do seguinte problema de negócio: "
+                    "um cientista de dados deverá desenvolver um modelo de "
+                    "concessão de crédito (classificação binária)."
+                ),
                 "columns": [
                     {
                         "name": "REF_DATE",
