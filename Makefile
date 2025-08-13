@@ -23,3 +23,6 @@ stats:
 
 install-ollama-gpt-oss:
 	@docker compose exec ollama ollama pull gpt-oss:20b
+
+popullate-data-source:
+	@python ./populate_sources.py
